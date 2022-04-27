@@ -73,8 +73,43 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
+  async addStory(user, newStory) {
+    /* 
+    Needed attributes:
+    =================
+    this.storyId = storyId;
+        this.title = title;
+        this.author = author;
+        this.url = url;
+        this.username = username;
+    this.createdAt = createdAt;
+
+    User attributes:
+    ================
+    username 
+    name
+    createdAt
+    favorites
+    ownStories
+    loginToken
+
+    newStory attributes
+    ===================
+    title
+    author
+    url
+    */
     // UNIMPLEMENTED: complete this function!
+    console.log(user)
+    const {username} = user
+    const {title, author, url} = newStory;
+    let storyId = StoryList.stories[-1].storyId + "1"
+    const createdAt = new Date().toISOString();
+
+    const story = new Story(storyId, title, author, url, 
+      username, createdAt);
+
+    return story
   }
 }
 
