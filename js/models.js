@@ -1,6 +1,7 @@
 "use strict";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNvb2ttMzUzIiwiaWF0IjoxNjUxMDgxNzcwfQ.x_AvL7fGF65KN5-bH1IoAALfi7MDWvesiRTRj50SFoQ"
 
 /******************************************************************************
  * Story: a single story in the system
@@ -74,42 +75,21 @@ class StoryList {
    */
 
   async addStory(user, newStory) {
-    /* 
-    Needed attributes:
-    =================
-    this.storyId = storyId;
-        this.title = title;
-        this.author = author;
-        this.url = url;
-        this.username = username;
-    this.createdAt = createdAt;
+    // Deconstruct arguments
+    const {author, title, url} = newStory;
+    const {loginToken: token} = user
 
-    User attributes:
-    ================
-    username 
-    name
-    createdAt
-    favorites
-    ownStories
-    loginToken
+    // Add new story to API
+    const storyAddResp = await axios.post(`${BASE_URL}/stories`, {
+      token: token,
+      story: { author, title, url }
+    })
 
-    newStory attributes
-    ===================
-    title
-    author
-    url
-    */
-    // UNIMPLEMENTED: complete this function!
-    console.log(user)
-    const {username} = user
-    const {title, author, url} = newStory;
-    let storyId = StoryList.stories[-1].storyId + "1"
-    const createdAt = new Date().toISOString();
+    // Retrieve from API, retrieve attributes needed for a new Story object
+    const storyListGetResp = await StoryList.getStories()
+    const { storyId, author:username, createdAt} = storyListGetResp.stories[0]
 
-    const story = new Story(storyId, title, author, url, 
-      username, createdAt);
-
-    return story
+    return new Story(storyId, title, author, url, username, createdAt)
   }
 }
 
@@ -229,3 +209,52 @@ class User {
     }
   }
 }
+
+async function deleteTestStories() {
+  const stories = await StoryList.getStories();
+  for (let story of stories.stories) {
+    const storyId = story.storyId;
+    if (story.username === "cookm353") {
+      console.log(story.username)
+      await axios.delete(`${BASE_URL}/stories/${storyId}`, {data: {token: TOKEN}})
+    }
+  }
+}
+
+async function testFunc() {
+  // Retrieve stories from API
+  const stories = await StoryList.getStories();
+  console.log(stories)
+  
+  /* cURL for adding stories to API
+  curl -i \
+    -H "Content-Type: application/json" \
+    -X POST \
+    -d '{"token":"PASTE_YOUR_TOKEN_HERE", "story": {"author":"Elie Schoppik","title":"Four Tips for Moving Faster as a Developer", "url": "https://www.rithmschool.com/blog/developer-productivity"} }' \
+    https://hack-or-snooze-v3.herokuapp.com/stories
+    */
+  
+  // const storyAddResp = await axios.post(`${BASE_URL}/stories`, {
+    //   token: TOKEN,
+    //   story: {
+      //     author: "Matt",
+      //     title: "The Joy Formidable",
+      //     url: "https://en.wikipedia.org/wiki/The_Joy_Formidable"
+      //   }
+      // })
+      
+  const date = new Date().toISOString()
+  
+  const me = new User({username: "cookm353", name: "Matt", 
+  createdAt: date, favorites: [], ownStorie: []}, TOKEN)
+  // console.log(me.loginToken)
+  
+  let newStory = await stories.addStory(me,
+    {title: "Test", author: "Me", url: "http://meow.com"});
+  
+  console.log(newStory instanceof Story);
+}
+
+
+deleteTestStories()
+testFunc()
