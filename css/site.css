@@ -106,6 +106,9 @@ form > hr {
   width: 70px;
 }
 
+.invalid-url {
+  border: 1.5px solid red;
+}
 
 /* responsive queries for tightening things up for mobile. */
 
