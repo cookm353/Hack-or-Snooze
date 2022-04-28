@@ -53,6 +53,17 @@ function putStoriesOnPage() {
 
 
 /** Submits form and adds new story to page */
-function addStory() {
-  
+async function submitStory(evt) {
+  evt.preventDefault();
+  const author = $("#story-author").val();
+  const title = $("#story-title").val();
+  const url = $("#story-url").val();
+  const stories = await StoryList.getStories();
+
+  let newStory = await stories.addStory(currentUser,
+    {title: title, author: author, url: url});
+
+  $("#storySubmitForm").hide()
 }
+
+$("#storySubmitForm button").on("click", submitStory);
