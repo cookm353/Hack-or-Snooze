@@ -79,11 +79,21 @@ class StoryList {
     const {author, title, url} = newStory;
     const {loginToken: token} = user
 
+    console.log(`Author: ${author}`);
+    console.log(`Title: ${title}`);
+    console.log(`URL: ${url}`)
+    console.log(`Token: ${token}`)
+
     // Add new story to API
-    const storyAddResp = await axios.post(`${BASE_URL}/stories`, {
-      token: token,
-      story: { author, title, url }
-    })
+    try {
+      const storyAddResp = await axios.post(`${BASE_URL}/stories`, {
+        token: token,
+        story: { author, title, url }
+      })
+    } catch {
+      $("#story-url").addClass("invalid-url")
+      alert("Error: Could not add story to API")
+    }
 
     // Retrieve from API, retrieve attributes needed for a new Story object
     const storyListGetResp = await StoryList.getStories()
@@ -226,19 +236,11 @@ async function deleteTestStories() {
 async function testFunc() {
   // Retrieve stories from API
   const stories = await StoryList.getStories();
-  
-  const date = new Date().toISOString()
-  
-  const me = new User({username: "cookm353", name: "Matt", 
-    createdAt: date, favorites: [], ownStorie: []}, TOKEN)
-  
-  let newStory = await stories.addStory(me,
+  // Add test story
+  let newStory = await stories.addStory(currentUser,
     {title: "Zombo", author: "Me", url: "https://www.zombo.com/"});
-  
-  console.log(newStory instanceof Story);
 }
 
 
 deleteTestStories();
-testFunc();
-
+// testFunc();
