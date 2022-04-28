@@ -50,3 +50,9 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+
+/** Submits form and adds new story to page */
+function addStory() {
+  
+}

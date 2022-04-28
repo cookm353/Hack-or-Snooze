@@ -37,6 +37,10 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
+  <div class="main-nav-links">
+    &nbsp;|
+    <a class="nav-link" href="#" id="submit-story">submit</a>
+  </div>
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
@@ -95,6 +99,26 @@
     <button type="submit">create account</button>
   </form>
 </section>
+
+<!-- Story submit form -->
+<form action="#"
+  id="storySubmitForm"
+  class="story-form hidden"
+  method="post">
+  <h4>Submit a Story</h4>
+  <div class="story-input">
+    <label for="story-author">Author:</label>
+    <input type="text" name="story-author" id="story-author">
+  </div>
+  <div class="story-input">
+    <label for="story-title">Title:</label>
+    <input type="text" name="story-title" id="story-title">
+  </div><div class="story-input">
+    <label for="story-url">Title:</label>
+    <input type="text" name="story-url" id="story-url">
+  </div>
+  <button type="submit">Submit</button>
+</form>
 
 <!-- Library JS & our JS -->
 <script src="https://unpkg.com/jquery"></script>

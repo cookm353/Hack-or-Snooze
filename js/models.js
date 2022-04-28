@@ -1,7 +1,7 @@
 "use strict";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNvb2ttMzUzIiwiaWF0IjoxNjUxMDgxNzcwfQ.x_AvL7fGF65KN5-bH1IoAALfi7MDWvesiRTRj50SFoQ"
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNvb2ttMzUzIiwiaWF0IjoxNjUxMDkxOTQyfQ.LeF-qVTSea3Osp2nd86H7B_kRJy2xEg9qu-z-IIPjPU"
 
 /******************************************************************************
  * Story: a single story in the system
@@ -104,14 +104,16 @@ class User {
    *   - token
    */
 
-  constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
+  constructor(
+    {
+      username,
+      name,
+      createdAt,
+      favorites = [],
+      ownStories = []
+    },
+    token) 
+  {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
@@ -224,37 +226,19 @@ async function deleteTestStories() {
 async function testFunc() {
   // Retrieve stories from API
   const stories = await StoryList.getStories();
-  console.log(stories)
   
-  /* cURL for adding stories to API
-  curl -i \
-    -H "Content-Type: application/json" \
-    -X POST \
-    -d '{"token":"PASTE_YOUR_TOKEN_HERE", "story": {"author":"Elie Schoppik","title":"Four Tips for Moving Faster as a Developer", "url": "https://www.rithmschool.com/blog/developer-productivity"} }' \
-    https://hack-or-snooze-v3.herokuapp.com/stories
-    */
-  
-  // const storyAddResp = await axios.post(`${BASE_URL}/stories`, {
-    //   token: TOKEN,
-    //   story: {
-      //     author: "Matt",
-      //     title: "The Joy Formidable",
-      //     url: "https://en.wikipedia.org/wiki/The_Joy_Formidable"
-      //   }
-      // })
-      
   const date = new Date().toISOString()
   
   const me = new User({username: "cookm353", name: "Matt", 
-  createdAt: date, favorites: [], ownStorie: []}, TOKEN)
-  // console.log(me.loginToken)
+    createdAt: date, favorites: [], ownStorie: []}, TOKEN)
   
   let newStory = await stories.addStory(me,
-    {title: "Test", author: "Me", url: "http://meow.com"});
+    {title: "Zombo", author: "Me", url: "https://www.zombo.com/"});
   
   console.log(newStory instanceof Story);
 }
 
 
-deleteTestStories()
-testFunc()
+deleteTestStories();
+testFunc();
+
