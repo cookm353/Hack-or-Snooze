@@ -79,11 +79,6 @@ class StoryList {
     const {author, title, url} = newStory;
     const {loginToken: token} = user
 
-    console.log(`Author: ${author}`);
-    console.log(`Title: ${title}`);
-    console.log(`URL: ${url}`)
-    console.log(`Token: ${token}`)
-
     // Add new story to API
     try {
       const storyAddResp = await axios.post(`${BASE_URL}/stories`, {
@@ -97,9 +92,17 @@ class StoryList {
 
     // Retrieve from API, retrieve attributes needed for a new Story object
     const storyListGetResp = await StoryList.getStories()
+    console.log(storyListGetResp)
+
+    console.log(storyListGetResp.stories[0])
     const { storyId, author:username, createdAt} = storyListGetResp.stories[0]
 
-    return new Story(storyId, title, author, url, username, createdAt)
+    const story = new Story(storyId, title, author, url, username, createdAt)
+
+    console.log(story)
+
+    // console.log(new Story(storyId, title, author, url, username, createdAt))
+    // return new Story(storyId, title, author, url, username, createdAt)
   }
 }
 
@@ -220,14 +223,38 @@ class User {
       return null;
     }
   }
+
+  /** Add a story to a user's list of favorites */
+  async addFavoriteStory(storyId) {
+    // Retrieve list of stories
+    const stories = await StoryList.getStories();
+
+    // Iterate thru them and find story with matching storyId
+    for (let story of stories.stories) {
+      if (story.storyId === storyId) {
+        this.favorites.push(story)
+      };
+    }
+  }
+
+  /** Remove a story from a user's list of favorites */
+  async removeFavoriteStory(storyId) {
+    // Loop over user's favorites
+    for (let story of this.favorites) {
+      if (story.storyId === storyId) {
+        const storyIndex = this.favorites.indexOf(story)
+        this.favorites.splice(storyIndex, 1);
+      }
+    }
+  }
 }
 
+// Clean up function
 async function deleteTestStories() {
   const stories = await StoryList.getStories();
   for (let story of stories.stories) {
     const storyId = story.storyId;
     if (story.username === "cookm353") {
-      console.log(story.username)
       await axios.delete(`${BASE_URL}/stories/${storyId}`, {data: {token: TOKEN}})
     }
   }
@@ -242,5 +269,5 @@ async function testFunc() {
 }
 
 
-deleteTestStories();
+// deleteTestStories();
 // testFunc();

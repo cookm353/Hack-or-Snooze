@@ -63,6 +63,9 @@ async function submitStory(evt) {
   let newStory = await stories.addStory(currentUser,
     {title: title, author: author, url: url});
 
+  console.log(newStory);
+    // currentUser.ownStories.push(newStory)
+
   $("#storySubmitForm").hide()
 }
 

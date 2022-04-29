@@ -48,3 +48,17 @@ console.warn("HEY STUDENT: This program sends many debug messages to" +
   " seeing those helpful debug messages. In your browser console, click on" +
   " menu 'Default Levels' and add Verbose");
 $(start);
+  
+    
+async function test(storyIndex) {
+  const storiesResp = await StoryList.getStories();
+  const stories = storiesResp.stories
+
+  for (let story of stories) {
+    if (story.username === "cookm353") {
+      await currentUser.addFavoriteStory(story.storyId)
+    }
+  }
+
+  return currentUser.favorites[storyIndex].storyId;
+}
