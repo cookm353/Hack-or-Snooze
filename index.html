@@ -41,6 +41,14 @@
     &nbsp;|
     <a class="nav-link" href="#" id="submit-story">submit</a>
   </div>
+  <div class="main-nav-links">
+    &nbsp;|
+    <a class="nav-link" href="#" id="fave-stories">favorites</a>
+  </div>
+  <div class="main-nav-links">
+    &nbsp;|
+    <a class="nav-link" href="#" id="own-stories">my stories</a>
+  </div>
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
@@ -48,14 +56,40 @@
   </div>
 </nav>
 
+
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
+  <!-- Story submit form -->
+  <form action="#"
+    id="storySubmitForm"
+    class="story-form hidden"
+    method="post">
+    <h4>Submit a Story</h4>
+    <div class="story-input">
+      <label for="story-author">Author:</label>
+      <input type="text" name="story-author" id="story-author">
+    </div>
+    <div class="story-input">
+      <label for="story-title">Title:</label>
+      <input type="text" name="story-title" id="story-title">
+    </div><div class="story-input">
+      <label for="story-url">URL:</label>
+      <input type="text" name="story-url" id="story-url">
+    </div>
+    <button type="submit">Submit</button>
+  </form>
 
   <!-- loading message (removed by JS after stories loaded) -->
   <div id="stories-loading-msg">Loading&hellip;</div>
 
   <!-- List of all stories -->
   <ol id="all-stories-list" class="stories-list"></ol>
+
+  <!-- List of favorite stories -->
+  <ul id="fave-stories-list" class="stories-list hidden"></ul>
+
+  <!-- List of own stories -->
+  <ul id="own-stories-list" class="stories-list hidden"></ul>
 
 </section>
 
@@ -100,25 +134,7 @@
   </form>
 </section>
 
-<!-- Story submit form -->
-<form action="#"
-  id="storySubmitForm"
-  class="story-form hidden"
-  method="post">
-  <h4>Submit a Story</h4>
-  <div class="story-input">
-    <label for="story-author">Author:</label>
-    <input type="text" name="story-author" id="story-author">
-  </div>
-  <div class="story-input">
-    <label for="story-title">Title:</label>
-    <input type="text" name="story-title" id="story-title">
-  </div><div class="story-input">
-    <label for="story-url">URL:</label>
-    <input type="text" name="story-url" id="story-url">
-  </div>
-  <button type="submit">Submit</button>
-</form>
+
 
 <!-- Library JS & our JS -->
 <script src="https://unpkg.com/jquery"></script>
@@ -130,5 +146,7 @@
 <script src="js/user.js"></script>
 <script src="js/stories.js"></script>
 
+<i class="fa-star far"></i>
+<i class="fa-star fas"></i>
 </body>
 </html>

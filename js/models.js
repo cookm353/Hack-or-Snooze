@@ -92,17 +92,10 @@ class StoryList {
 
     // Retrieve from API, retrieve attributes needed for a new Story object
     const storyListGetResp = await StoryList.getStories()
-    console.log(storyListGetResp)
 
-    console.log(storyListGetResp.stories[0])
     const { storyId, author:username, createdAt} = storyListGetResp.stories[0]
 
     const story = new Story(storyId, title, author, url, username, createdAt)
-
-    console.log(story)
-
-    // console.log(new Story(storyId, title, author, url, username, createdAt))
-    // return new Story(storyId, title, author, url, username, createdAt)
   }
 }
 
