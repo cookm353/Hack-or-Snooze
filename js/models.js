@@ -220,24 +220,27 @@ class User {
   /** Add a story to a user's list of favorites */
   async addFavoriteStory(storyId) {
     // Retrieve list of stories
-    const stories = await StoryList.getStories();
-
-    // Iterate thru them and find story with matching storyId
-    for (let story of stories.stories) {
-      if (story.storyId === storyId) {
-        this.favorites.push(story)
-      };
+    const reqURL = `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`
+    try {
+      const addFaveResp = await axios.post(reqURL, 
+        {token: currentUser.loginToken})
+      console.log(addFaveResp)
+    } catch {
+      alert("Couldn't add story to favorites.")
     }
   }
 
   /** Remove a story from a user's list of favorites */
   async removeFavoriteStory(storyId) {
     // Loop over user's favorites
-    for (let story of this.favorites) {
-      if (story.storyId === storyId) {
-        const storyIndex = this.favorites.indexOf(story)
-        this.favorites.splice(storyIndex, 1);
-      }
+    const reqURL = `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`
+    
+    try {
+      const removeFaveResp = await axios.delete(reqURL, 
+        {data: {token: currentUser.loginToken}})
+      console.log(removeFaveResp)
+    } catch {
+      alert("Error: Couldn't remove from favorites")
     }
   }
 }
