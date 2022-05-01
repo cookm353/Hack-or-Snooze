@@ -45,10 +45,24 @@ function putStoriesOnPage() {
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
+    addStars($story);
     $allStoriesList.append($story);
   }
 
   $allStoriesList.show();
+}
+
+function addStars(story) {
+  const $filledStar = $('<span><i class="fa-star fas"></i></span>');
+  const $emptyStar = $('<span><i class="fa-star far"></i></span>');
+  
+  const id = story[0].getAttribute("id");
+  const faveIds = currentUser.favorites.map(story => story.storyId);
+  if ( faveIds.indexOf(id) !== -1 ) {
+    story.prepend($filledStar);
+  } else {
+    story.prepend($emptyStar);
+  }  
 }
 
 /** Submits form and adds new story to page */
@@ -69,3 +83,24 @@ async function submitStory(evt) {
 }
 
 $("#storySubmitForm button").on("click", submitStory);
+
+/** Add or remove story from favorites w/ UI */
+async function addRemoveFavorite(evt) {  
+  // Get element's class list and id of story
+  const classes = evt.target.classList
+  const storyId = evt.target.parentNode.parentNode.getAttribute("id")
+
+  if (classes.contains("far")) { // Add to favorites
+    currentUser.addFavoriteStory(storyId)
+  } else if (classes.contains("fas")) { // Remove from favorites
+    currentUser.removeFavoriteStory(storyId)
+  }
+
+  // Switch between filled in and empty stars
+  if (classes.contains("fa-star")) {
+    classes.toggle("far")
+    classes.toggle("fas")
+  }
+}
+
+$("ol").on("click", $(".fa-star"), addRemoveFavorite)
