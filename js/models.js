@@ -88,6 +88,8 @@ class StoryList {
       $("#story-url").addClass("invalid-url")
       alert("Error: Could not add story to API")
     }
+
+    $("#storySubmitForm").hide()
   }
 }
 
