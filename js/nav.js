@@ -58,7 +58,6 @@ $("#fave-stories").on("click", showFavorites);
 function showMyStories() {
   putStoriesOnPage("own")
   const $trashIcon = $("<span class='remove-story'><i class='fas fa-trash'></i></span>")
-  console.log($trashIcon)
   const $ownLis = $("#own-stories-list li")
   $ownLis.prepend($trashIcon)
 }

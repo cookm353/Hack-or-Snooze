@@ -88,13 +88,6 @@ class StoryList {
       $("#story-url").addClass("invalid-url")
       alert("Error: Could not add story to API")
     }
-
-    // Retrieve from API, retrieve attributes needed for a new Story object
-    const storyListGetResp = await StoryList.getStories()
-
-    const { storyId, author:username, createdAt} = storyListGetResp.stories[0]
-
-    const story = new Story(storyId, title, author, url, username, createdAt)
   }
 }
 
