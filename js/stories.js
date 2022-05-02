@@ -60,7 +60,7 @@ function putStoriesOnPage(page) {
   // loop through all of our stories and generate HTML for them
   for (let story of stories) {
     const $story = generateStoryMarkup(story);
-    addStarsToStory($story);
+    if (page !== "own") addStarsToStory($story);
     currentList.append($story);
   }
 
