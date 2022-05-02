@@ -135,8 +135,10 @@ async function addRemoveFavoriteWithUI(evt) {
     classes.toggle("fas")
   }
 
-  // makeFavoritesList();
-  putStoriesOnPage("faves")
+  // Refresh favorites if currently viewing
+  if ($faveStoriesList.is(":visible")) {
+    putStoriesOnPage("faves")
+  }
 }
 
 $("ol, ul").on("click", $(".fa-star"), addRemoveFavoriteWithUI)
