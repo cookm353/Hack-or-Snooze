@@ -9,7 +9,7 @@ async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
 
-  putStoriesOnPage();
+  putStoriesOnPage("main");
 }
 
 /**
@@ -36,46 +36,42 @@ function generateStoryMarkup(story) {
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
-
-function putStoriesOnPage() {
+function putStoriesOnPage(page) {
   console.debug("putStoriesOnPage");
-
-  $allStoriesList.empty();
-
-  // loop through all of our stories and generate HTML for them
-  for (let story of storyList.stories) {
-    const $story = generateStoryMarkup(story);
-    addStarsToStory($story);
-    $allStoriesList.append($story);
+  
+  let currentList, stories;
+  switch (page) {
+    case "main":
+      currentList = $allStoriesList;
+      stories = storyList.stories
+      break;
+    case "faves":
+      currentList = $faveStoriesList;
+      stories = currentUser.favorites
+      break;
+    case "own":
+      currentList = $ownStoriesList
+      stories = currentUser.ownStories
+      break;
   }
 
-  $allStoriesList.show();
+  currentList.empty();
+
+  // loop through all of our stories and generate HTML for them
+  for (let story of stories) {
+    const $story = generateStoryMarkup(story);
+    addStarsToStory($story);
+    currentList.append($story);
+  }
+
+  // Hide lists other than the one indicated
+  const lists = [$allStoriesList, $faveStoriesList, $ownStoriesList]
+  const otherLists = lists.filter(list => currentList !== list)
+  otherLists.map(list => list.hide())
+
+  currentList.show();
 }
 
-/** Create list of favorited stories */
-function makeFavoritesList() {
-  $faveStoriesList.empty()
-  const favoriteStories =  currentUser.favorites;
-  
-  favoriteStories.map(story => {
-    const $story = generateStoryMarkup(story)
-    addStarsToStory($story)
-    $faveStoriesList.append($story)
-  })
-
-}
-
-/** Create list of stories user has posted */
-function makeOwnStoriesList() {
-  $ownStoriesList.empty();
-  const ownStories = currentUser.ownStories;
-
-  ownStories.map(story => {
-    const $story = generateStoryMarkup(story)
-    addStarsToStory($story)
-    $ownStoriesList.append($story)
-  })
-}
 
 /** Add stars to li elemnts */
 function addStarsToStory(story) {
@@ -108,7 +104,8 @@ async function submitStory(evt) {
 
   
   $ownStoriesList.empty();
-  makeOwnStoriesList();
+  // makeOwnStoriesList();
+  putStoriesOnPage("own")
   $("#storySubmitForm").toggle();
 }
 
@@ -138,7 +135,8 @@ async function addRemoveFavoriteWithUI(evt) {
     classes.toggle("fas")
   }
 
-  makeFavoritesList();
+  // makeFavoritesList();
+  putStoriesOnPage("faves")
 }
 
 $("ol, ul").on("click", $(".fa-star"), addRemoveFavoriteWithUI)
