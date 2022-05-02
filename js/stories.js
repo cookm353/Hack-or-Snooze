@@ -45,17 +45,45 @@ function putStoriesOnPage() {
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
-    addStars($story);
+    addStarsToStory($story);
     $allStoriesList.append($story);
   }
 
   $allStoriesList.show();
 }
 
-function addStars(story) {
+/** Create list of favorited stories */
+function makeFavoritesList() {
+  $faveStoriesList.empty()
+  const favoriteStories =  currentUser.favorites;
+  
+  favoriteStories.map(story => {
+    const $story = generateStoryMarkup(story)
+    addStarsToStory($story)
+    $faveStoriesList.append($story)
+  })
+
+}
+
+/** Create list of stories user has posted */
+function makeOwnStoriesList() {
+  $ownStoriesList.empty();
+  const ownStories = currentUser.ownStories;
+
+  ownStories.map(story => {
+    const $story = generateStoryMarkup(story)
+    addStarsToStory($story)
+    $ownStoriesList.append($story)
+  })
+}
+
+/** Add stars to li elemnts */
+function addStarsToStory(story) {
+  // HTML for stars
   const $filledStar = $('<span><i class="fa-star fas"></i></span>');
   const $emptyStar = $('<span><i class="fa-star far"></i></span>');
   
+  // Prepend an empty or filled star based on if a story in favorites
   const id = story[0].getAttribute("id");
   const faveIds = currentUser.favorites.map(story => story.storyId);
   if ( faveIds.indexOf(id) !== -1 ) {
@@ -65,7 +93,9 @@ function addStars(story) {
   }  
 }
 
-/** Submits form and adds new story to page */
+/** 
+ * Submits form and adds new story to page
+*/
 async function submitStory(evt) {
   evt.preventDefault();
   const author = $("#story-author").val();
@@ -75,24 +105,30 @@ async function submitStory(evt) {
   
   let newStory = await stories.addStory(currentUser,
     {title: title, author: author, url: url});
-    
-  console.log(newStory);
-    // currentUser.ownStories.push(newStory)
-    
-  $("#storySubmitForm").toggle()
+
+  
+  $ownStoriesList.empty();
+  makeOwnStoriesList();
+  $("#storySubmitForm").toggle();
 }
 
 $("#storySubmitForm button").on("click", submitStory);
 
-/** Add or remove story from favorites w/ UI */
-async function addRemoveFavorite(evt) {  
+/** 
+ * Add or remove story from favorites w/ UI 
+*/
+async function addRemoveFavoriteWithUI(evt) {  
+  $faveStoriesList.empty();
+
   // Get element's class list and id of story
   const classes = evt.target.classList
   const storyId = evt.target.parentNode.parentNode.getAttribute("id")
+  console.log(evt.target.parentNode.parentNode)
 
-  if (classes.contains("far")) { // Add to favorites
+  // Add/remove story from favorites based on class
+  if (classes.contains("far")) { // Add
     currentUser.addFavoriteStory(storyId)
-  } else if (classes.contains("fas")) { // Remove from favorites
+  } else if (classes.contains("fas")) { // Remove
     currentUser.removeFavoriteStory(storyId)
   }
 
@@ -101,6 +137,8 @@ async function addRemoveFavorite(evt) {
     classes.toggle("far")
     classes.toggle("fas")
   }
+
+  makeFavoritesList();
 }
 
-$("ol").on("click", $(".fa-star"), addRemoveFavorite)
+$("ol, ul").on("click", $(".fa-star"), addRemoveFavoriteWithUI)
