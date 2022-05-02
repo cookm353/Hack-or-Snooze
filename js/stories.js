@@ -111,8 +111,7 @@ async function submitStory(evt) {
     }
   })
   
-  putStoriesOnPage("own")
-  $("#storySubmitForm").toggle();
+  getAndShowStoriesOnStart();
 }
 
 $("#storySubmitForm button").on("click", submitStory);
@@ -121,22 +120,50 @@ $("#storySubmitForm button").on("click", submitStory);
  * Add or remove story from favorites w/ UI 
 */
 async function addRemoveFavoriteWithUI(evt) {  
-  // Get element's class list and id of story
-  const classes = evt.target.classList
-  const storyId = evt.target.parentNode.parentNode.getAttribute("id")
+  if (evt.target.classList.contains("fa-star")) {
+    // Get element's class list and id of story
+    const classes = evt.target.classList
+    const storyId = evt.target.parentNode.parentNode.getAttribute("id")
 
-  // Add/remove story from favorites based on class
-  if (classes.contains("far")) { // Add
-    currentUser.addFavoriteStory(storyId)
-  } else if (classes.contains("fas")) { // Remove
-    currentUser.removeFavoriteStory(storyId)
-  }
+    // Add/remove story from favorites based on class
+    if (classes.contains("far")) { // Add
+      currentUser.addFavoriteStory(storyId)
+    } else if (classes.contains("fas")) { // Remove
+      currentUser.removeFavoriteStory(storyId)
+    }
 
-  // Switch between filled in and empty stars
-  if (classes.contains("fa-star")) {
-    classes.toggle("far")
-    classes.toggle("fas")
+    // Switch between filled in and empty stars
+    if (classes.contains("fa-star")) {
+      classes.toggle("far")
+      classes.toggle("fas")
+    }
   }
 }
 
 $("ol, ul").on("click", $(".fa-star"), addRemoveFavoriteWithUI)
+
+/**
+ * Delete story
+ */
+async function deleteStory(evt) {
+  if (evt.target.classList.contains("fa-trash")) {
+    const storyId = evt.target.parentNode.parentNode.getAttribute("id")
+    const reqURL = `${BASE_URL}/stories/${storyId}`
+
+    try {
+      const deleteResp = await axios.delete(reqURL, 
+        {data: {token: currentUser.loginToken}})
+      console.log("Deleted!")
+    } catch {
+      alert("Error: Couldn't delete story")
+    }
+
+    console.log(evt.target.parentNode.parentNode)
+    evt.target.parentNode.parentNode.remove()
+
+    // putStoriesOnPage("own");
+    showMyStories();
+  }
+}
+
+$("ol, ul").on("click", $(".fa-trash"), deleteStory)
