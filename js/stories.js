@@ -104,7 +104,13 @@ async function submitStory(evt) {
 
   
   $ownStoriesList.empty();
-  // makeOwnStoriesList();
+  
+  allStoryLists.map(list => {
+    if (list.is("visible")) {
+      console.log(list)
+    }
+  })
+  
   putStoriesOnPage("own")
   $("#storySubmitForm").toggle();
 }
@@ -115,12 +121,9 @@ $("#storySubmitForm button").on("click", submitStory);
  * Add or remove story from favorites w/ UI 
 */
 async function addRemoveFavoriteWithUI(evt) {  
-  $faveStoriesList.empty();
-
   // Get element's class list and id of story
   const classes = evt.target.classList
   const storyId = evt.target.parentNode.parentNode.getAttribute("id")
-  console.log(evt.target.parentNode.parentNode)
 
   // Add/remove story from favorites based on class
   if (classes.contains("far")) { // Add
@@ -133,11 +136,6 @@ async function addRemoveFavoriteWithUI(evt) {
   if (classes.contains("fa-star")) {
     classes.toggle("far")
     classes.toggle("fas")
-  }
-
-  // Refresh favorites if currently viewing
-  if ($faveStoriesList.is(":visible")) {
-    putStoriesOnPage("faves")
   }
 }
 
