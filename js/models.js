@@ -25,8 +25,7 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    return new URL(this.url).host
   }
 }
 
@@ -219,15 +218,22 @@ class User {
 
   /** Add a story to a user's list of favorites */
   async addFavoriteStory(storyId) {
-    // Retrieve list of stories
     const reqURL = `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`
     try {
-      const addFaveResp = await axios.post(reqURL, 
+      // const addFaveResp = await axios.post(reqURL, 
+      await axios.post(reqURL, 
         {token: currentUser.loginToken})
-      console.log(addFaveResp)
     } catch {
       alert("Couldn't add story to favorites.")
     }
+
+    // Update currenUser
+    const stories = await StoryList.getStories()
+    stories.stories.map(story => {
+      if (story.storyId === storyId) {
+        currentUser.favorites.push(story)
+      }
+    })
   }
 
   /** Remove a story from a user's list of favorites */
@@ -238,10 +244,16 @@ class User {
     try {
       const removeFaveResp = await axios.delete(reqURL, 
         {data: {token: currentUser.loginToken}})
-      console.log(removeFaveResp)
     } catch {
       alert("Error: Couldn't remove from favorites")
     }
+
+    // Update currentUser
+    currentUser.favorites.map((story, index) => {
+      if (story.storyId === storyId) {
+        currentUser.favorites.splice(index, 1)
+      }
+    })
   }
 }
 
