@@ -81,12 +81,15 @@ function addStarsToStory(story) {
   
   // Prepend an empty or filled star based on if a story in favorites
   const id = story[0].getAttribute("id");
-  const faveIds = currentUser.favorites.map(story => story.storyId);
-  if ( faveIds.indexOf(id) !== -1 ) {
-    story.prepend($filledStar);
-  } else {
-    story.prepend($emptyStar);
-  }  
+
+  if (currentUser != undefined) {
+    const faveIds = currentUser.favorites.map(story => story.storyId);
+    if ( faveIds.indexOf(id) !== -1 ) {
+      story.prepend($filledStar);
+    } else {
+      story.prepend($emptyStar);
+    }  
+  }
 }
 
 /** 
