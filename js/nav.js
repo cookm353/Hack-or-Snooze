@@ -42,7 +42,9 @@ function updateNavOnLogin() {
 /** Display form for user to submit a story */
 
 function showStorySubmitForm() {
-  $("#storySubmitForm").toggleClass("hidden");
+  if (currentUser !== undefined) {
+    $("#storySubmitForm").toggleClass("hidden");
+  } 
 }
 
 $("#submit-story").on("click", showStorySubmitForm);
