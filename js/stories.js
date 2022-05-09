@@ -39,39 +39,57 @@ function generateStoryMarkup(story) {
 function putStoriesOnPage(page) {
   console.debug("putStoriesOnPage");
   
-  let currentList, stories;
+  let currentPage, stories;
   switch (page) {
     case "main":
-      currentList = $allStoriesList;
+      currentPage = $allStoriesList;
       stories = storyList.stories
       break;
     case "faves":
-      currentList = $faveStoriesList;
+      currentPage = $faveStoriesList;
       stories = currentUser.favorites
       break;
     case "own":
-      currentList = $ownStoriesList
+      currentPage = $ownStoriesList
       stories = currentUser.ownStories
       break;
   }
 
-  currentList.empty();
+  currentPage.empty();
 
   // loop through all of our stories and generate HTML for them
   for (let story of stories) {
     const $story = generateStoryMarkup(story);
     if (page !== "own") addStarsToStory($story);
-    currentList.append($story);
+    currentPage.append($story);
   }
 
   // Hide lists other than the one indicated
   const lists = [$allStoriesList, $faveStoriesList, $ownStoriesList]
-  const otherLists = lists.filter(list => currentList !== list)
+  const otherLists = lists.filter(list => currentPage !== list)
   otherLists.map(list => list.hide())
 
-  currentList.show();
+  currentPage = getVisibleList();
+  putStoriesOnPage(currentPage)
+  // currentList.show();
 }
 
+function getVisibleList() {
+  for (list in allStoriesList) {
+    const id = list.getAttribute("id")
+    switch(id) {
+      case "all-stories-list":
+        return "all";
+        break;
+      case "fave-stories-list":
+        return "fave";
+        break;
+      case "own-stories-list":
+        return "own";
+        break;
+    }
+  }
+}
 
 /** Add stars to li elemnts */
 function addStarsToStory(story) {
@@ -140,6 +158,8 @@ async function addRemoveFavoriteWithUI(evt) {
       classes.toggle("far")
       classes.toggle("fas")
     }
+
+    
   }
 }
 
@@ -164,8 +184,8 @@ async function deleteStory(evt) {
     console.log(evt.target.parentNode.parentNode)
     evt.target.parentNode.parentNode.remove()
 
-    // putStoriesOnPage("own");
-    showMyStories();
+    putStoriesOnPage("own");
+    // showMyStories();
   }
 }
 
